@@ -11,7 +11,7 @@ namespace universe_project
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello Universe!");
+            Console.WriteLine("Hello Universe !");
             Console.WriteLine("------------------");
 
             Question1 q1 = new Question1();

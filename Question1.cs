@@ -9,12 +9,22 @@ namespace universe_project
 {
     class Question1
     {
+        public static ProgressViewer progressViewer = new ProgressViewer();
+
         public Universe DeserializeAll(string directoryPath)
         {
             long start = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            Console.WriteLine("Q1 commence !");
+            Console.WriteLine("La version synchrone commence !");
             Universe universe = new Universe() { systems = new List<System>() };
             List<string> systems = Directory.GetDirectories(directoryPath, "*", SearchOption.TopDirectoryOnly).ToList();
+
+            int totalPlanetFiles = 0;
+
+            foreach (string system in systems)
+            {
+                totalPlanetFiles += Directory.GetFiles(system).ToList().Count;
+            }
+            progressViewer.totalPlanetFiles = totalPlanetFiles;
 
             foreach (string systemName in systems)
             {
@@ -32,7 +42,7 @@ namespace universe_project
             }
             long end = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             long time = end - start;
-            Console.WriteLine("Q1 a fini en " + time + " millisecondes");
+            Console.WriteLine("\nLa version synchrone a fini en " + time + " millisecondes");
             return universe;
         }
 
@@ -40,6 +50,8 @@ namespace universe_project
         {
             string data = File.ReadAllText(filePath);
             Planet result = JsonConvert.DeserializeObject<Planet>(data);
+            result.finishDeserialize += progressViewer.OnReceived;
+            result.isDeserialized();
             return result;
         }
     }

@@ -21,5 +21,11 @@ namespace universe_project
         public int usability;
         public int orbit;
         public string name;
+        public event EventHandler finishDeserialize;
+
+        public void isDeserialized()
+        {
+            finishDeserialize?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
